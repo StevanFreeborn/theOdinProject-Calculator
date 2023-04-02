@@ -1,0 +1,21 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2021": true,
+    "jest": true
+  },
+  "plugins": ["sort-exports"],
+  "extends": ["prettier", "eslint:recommended"],
+  "overrides": [],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "sort-exports/sort-exports": [
+      "error",
+      { "sortDir": "asc" }
+    ]
+  }
+}
