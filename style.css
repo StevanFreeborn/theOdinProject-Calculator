@@ -1,3 +1,9 @@
+:root {
+  --black: #000;
+  --light-black: #000000e6;
+  --white: #fff;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -16,9 +22,11 @@ body {
 #iphone {
   height: 896px;
   width: 414px;
-  background: #000000de;
+  background: var(--light-black);
   border-radius: 50px;
-  border: 10px solid #000;
+  border: 10px solid var(--black);
+  display: flex;
+  flex-direction: column;
 }
 
 #notch-container {
@@ -26,13 +34,13 @@ body {
   display: flex;
   align-items: flex-end;
   justify-content: space-evenly;
-  color: #fff;
+  color: var(--white);
 }
 
 #notch {
   height: 25px;
   flex: 2;
-  background: #000;
+  background: var(--black);
   border-bottom-left-radius: 50px;
   border-bottom-right-radius: 50px;
 }
@@ -56,4 +64,85 @@ body {
 
 #statuses-container>svg {
   margin-right: 5px;
+}
+
+#input-output-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#input-output {
+  display: flex;
+  margin-top: 5px;
+  align-items: flex-start;
+}
+
+#speaker {
+  display: flex;
+  margin-left: 20px;
+}
+
+.speaker-left-end {
+  height: 6px;
+  width: 6px;
+  border-radius: 50% 0 0 50%;
+  background: rgb(51, 51, 51);
+}
+
+.speaker-body {
+  height: 6px;
+  width: 25px;
+  background: rgb(51, 51, 51);
+}
+
+.speaker-right-end {
+  height: 6px;
+  width: 6px;
+  border-radius: 0 45% 45% 0;
+  background: rgb(51, 51, 51);
+}
+
+#camera {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background: rgb(51, 51, 51);
+  margin: 0 5px;
+}
+
+#display-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px;
+}
+
+#buttons-container {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  row-gap: 10px;
+  margin: 40px 10px 40px 10px;
+}
+
+.button-row {
+  flex: 1;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.button {
+  flex: 1;
+  height: auto;
+  border-radius: 50%;
+  background: grey;
+  color: var(--white);
+  font-size: 20px;
+}
+
+.zero {
+  flex: 2;
 }

@@ -16,7 +16,21 @@
       <div id="time-container">
         <span id="time"></span>
       </div>
-      <div id="notch"></div>
+      <div id="notch">
+        <div id="input-output-container">
+          <div class="sensor"></div>
+          <div class="sensor"></div>
+          <div id="input-output">
+            <div id="speaker">
+              <div class="speaker-left-end"></div>
+              <div class="speaker-body"></div>
+              <div class="speaker-right-end"></div>
+            </div>
+            <div id="camera"></div>
+          </div>
+          <div class="sensor"></div>
+        </div>
+      </div>
       <div id="statuses-container">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-bar-chart-fill"
           viewBox="0 0 16 16">
@@ -38,6 +52,38 @@
         </svg>
       </div>
     </div>
+    <div id="display-container"></div>
+    <div id="buttons-container">
+      <div class="button-row">
+        <button class="button modifier">AC</button>
+        <button class="button modifier">+/-</button>
+        <button class="button modifier">&LeftArrow;</button>
+        <button class="button operator">÷</button>
+      </div>
+      <div class="button-row">
+        <button class="button">7</button>
+        <button class="button">8</button>
+        <button class="button">9</button>
+        <button class="button operator">x</button>
+      </div>
+      <div class="button-row">
+        <button class="button">4</button>
+        <button class="button">5</button>
+        <button class="button">6</button>
+        <button class="button operator">-</button>
+      </div>
+      <div class="button-row">
+        <button class="button">1</button>
+        <button class="button">2</button>
+        <button class="button">3</button>
+        <button class="button operator">+</button>
+      </div>
+      <div class="button-row">
+        <button class="button zero">0</button>
+        <button class="button">.</button>
+        <button class="button operator">=</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -45,10 +91,10 @@
       const time = document.getElementById('time');
       const date = new Date();
       const hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-      const minutes = date.getMinutes();
+      const minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
       time.innerHTML = `${hours}:${minutes}`;
     }
-
+    updateTime();
     setInterval(updateTime, 1000);
   </script>
 
