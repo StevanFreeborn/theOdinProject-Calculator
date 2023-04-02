@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#iphone {
+  height: 896px;
+  width: 414px;
+  background: #000000de;
+  border-radius: 50px;
+  border: 10px solid #000;
+}
+
+#notch-container {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  color: #fff;
+}
+
+#notch {
+  height: 25px;
+  flex: 2;
+  background: #000;
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+
+#time-container {
+  flex: 1;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end
+}
+
+#statuses-container {
+  flex: 1;
+  width: 107px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+#statuses-container>svg {
+  margin-right: 5px;
+}
