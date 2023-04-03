@@ -55,48 +55,38 @@
     </div>
     <div id="buttons-container">
       <div class="button-row">
-        <button class="button modifier">AC</button>
+        <button id="clear-button" class="button modifier">AC</button>
         <button class="button modifier">+/-</button>
         <button class="button modifier">&LeftArrow;</button>
         <button class="button operator">÷</button>
       </div>
       <div class="button-row">
-        <button class="button">7</button>
-        <button class="button">8</button>
-        <button class="button">9</button>
+        <button class="button digit">7</button>
+        <button class="button digit">8</button>
+        <button class="button digit">9</button>
         <button class="button operator">x</button>
       </div>
       <div class="button-row">
-        <button class="button">4</button>
-        <button class="button">5</button>
-        <button class="button">6</button>
+        <button class="button digit">4</button>
+        <button class="button digit">5</button>
+        <button class="button digit">6</button>
         <button class="button operator">-</button>
       </div>
       <div class="button-row">
-        <button class="button">1</button>
-        <button class="button">2</button>
-        <button class="button">3</button>
+        <button class="button digit">1</button>
+        <button class="button digit">2</button>
+        <button class="button digit">3</button>
         <button class="button operator">+</button>
       </div>
       <div class="button-row">
-        <button class="button zero">0</button>
+        <button class="button digit zero">0</button>
         <button class="button">.</button>
         <button class="button operator equals">=</button>
       </div>
     </div>
   </div>
 
-  <script>
-    function updateTime() {
-      const time = document.getElementById('time');
-      const date = new Date();
-      const hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-      const minutes = date.getMinutes() < 10 ? `0${date.getMinutes()}` : date.getMinutes();
-      time.innerHTML = `${hours}:${minutes}`;
-    }
-    updateTime();
-    setInterval(updateTime, 1000);
-  </script>
+  <script src="src/index.js" type="module"></script>
 
 </body>
 
