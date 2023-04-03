@@ -1,0 +1,171 @@
+:root {
+  --black: #000;
+  --light-black: #000000f5;
+  --white: #fff;
+  --speaker-camera-color: #333;
+  --operator-button-color: #ff9500;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#iphone {
+  height: 896px;
+  width: 414px;
+  background: var(--light-black);
+  border-radius: 50px;
+  border: 10px solid var(--black);
+  display: flex;
+  flex-direction: column;
+}
+
+#notch-container {
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+  color: var(--white);
+}
+
+#notch {
+  height: 25px;
+  flex: 2;
+  background: var(--black);
+  border-bottom-left-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+
+#time-container {
+  flex: 1;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end
+}
+
+#statuses-container {
+  flex: 1;
+  width: 107px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+#statuses-container>svg {
+  margin-right: 5px;
+}
+
+#input-output-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+#input-output {
+  display: flex;
+  margin-top: 5px;
+  align-items: flex-start;
+}
+
+#speaker {
+  display: flex;
+  margin-left: 20px;
+  width: 37px;
+  height: 6px;
+  background-color: var(--speaker-camera-color);
+  border-radius: 999px;
+}
+
+#camera {
+  height: 8px;
+  width: 8px;
+  border-radius: 50%;
+  background: rgb(51, 51, 51);
+  margin: 0 5px;
+}
+
+#display-container {
+  flex: 2;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  margin: 0 10px;
+}
+
+#display {
+  color: var(--white);
+  font-size: 60px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 20px;
+  width: 100%;
+}
+
+#buttons-container {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 40px 10px 40px 10px;
+}
+
+.button-row {
+  flex: 1;
+  display: flex;
+  justify-content: space-evenly;
+  gap: 10px;
+}
+
+.button {
+  flex: 1;
+  height: auto;
+  border-radius: 50%;
+  background: #333333;
+  color: var(--white);
+  font-size: 28px;
+  border: none;
+}
+
+.button:active {
+  background: #4d4d4d;
+}
+
+.zero {
+  flex: 2;
+  border-radius: 999px;
+}
+
+.modifier {
+  color: black;
+  background: #a5a5a5;
+}
+
+.modifier:active {
+  background: #d9d9d9;
+}
+
+.operator {
+  background: var(--operator-button-color);
+}
+
+.operator:focus:not(.equals) {
+  color: var(--operator-button-color);
+  background-color: var(--white);
+}
+
+.equals:active {
+  background: #fad39c;
+}
