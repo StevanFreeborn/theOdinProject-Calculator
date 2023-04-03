@@ -1,6 +1,6 @@
 :root {
   --black: #000;
-  --light-black: #000000e6;
+  --light-black: #000000f5;
   --white: #fff;
 }
 
@@ -112,19 +112,27 @@ body {
 }
 
 #display-container {
-  flex: 1;
+  flex: 2;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-end;
   margin: 0 10px;
 }
 
+#display {
+  color: var(--white);
+  font-size: 60px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 20px;
+  width: 100%;
+}
+
 #buttons-container {
-  flex: 2;
+  flex: 3;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  row-gap: 10px;
   margin: 40px 10px 40px 10px;
 }
 
@@ -132,17 +140,46 @@ body {
   flex: 1;
   display: flex;
   justify-content: space-evenly;
+  gap: 10px;
 }
 
 .button {
   flex: 1;
   height: auto;
   border-radius: 50%;
-  background: grey;
+  background: #333333;
   color: var(--white);
-  font-size: 20px;
+  font-size: 28px;
+  border: none;
+}
+
+.button:active {
+  background: #4d4d4d;
 }
 
 .zero {
   flex: 2;
+  border-radius: 999px;
+}
+
+.modifier {
+  color: black;
+  background: #a5a5a5;
+}
+
+.modifier:active {
+  background: #d9d9d9;
+}
+
+.operator {
+  background: #ff9500;
+}
+
+.operator:active {
+  background: #f5d1a0;
+}
+
+.operator:focus {
+  color: #ff9500;
+  background-color: var(--white);
 }
