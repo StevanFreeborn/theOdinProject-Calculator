@@ -83,26 +83,10 @@ body {
 #speaker {
   display: flex;
   margin-left: 20px;
-}
-
-.speaker-left-end {
+  width: 37px;
   height: 6px;
-  width: 6px;
-  border-radius: 50% 0 0 50%;
-  background: var(--speaker-camera-color);
-}
-
-.speaker-body {
-  height: 6px;
-  width: 25px;
-  background: var(--speaker-camera-color);
-}
-
-.speaker-right-end {
-  height: 6px;
-  width: 6px;
-  border-radius: 0 45% 45% 0;
-  background: var(--speaker-camera-color);
+  background-color: var(--speaker-camera-color);
+  border-radius: 999px;
 }
 
 #camera {
