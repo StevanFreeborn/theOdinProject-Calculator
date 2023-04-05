@@ -53,20 +53,79 @@ window.addEventListener('DOMContentLoaded', () => {
   );
 
   equalsButton.addEventListener('click', () => {
-    const result = performCalculation(state);
+    handleEqualsClick(state);
+  });
 
-    updateState(state, {
-      displayValue: result,
-      firstOperand: result,
-      waitingForSecondOperand: true,
-      hasBeenEvaluated: true,
-    });
+  const decimalButton = document.querySelector(
+    '#decimal-button'
+  );
+
+  decimalButton.addEventListener('click', () => {
+    handleDecimalClick(state);
+  });
+
+  const signButton = document.querySelector('#sign-button');
+
+  signButton.addEventListener('click', () => {
+    handleSignClick(state);
   });
 
   updateTime();
   setInterval(updateTime, 1000);
 });
 
+function handleSignClick(state) {
+  if (
+    state.waitingForFirstOperand === true ||
+    state.hasBeenEvaluated === true
+  ) {
+    updateState(state, {
+      displayValue: state.displayValue * -1,
+      firstOperand: state.firstOperand * -1,
+    });
+    return;
+  }
+
+  updateState(state, {
+    displayValue: state.displayValue * -1,
+    secondOperand: state.secondOperand * -1,
+  });
+}
+
+/**
+ * @param {State} state
+ * @returns {void}
+ */
+function handleDecimalClick(state) {
+  if (state.displayValue.toString().includes('.')) {
+    return;
+  }
+
+  updateState(state, {
+    displayValue: state.displayValue + '.',
+  });
+}
+
+/**
+ * @param {State} state
+ * @returns {void}
+ */
+function handleEqualsClick(state) {
+  const result = performCalculation(state);
+
+  updateState(state, {
+    displayValue: result,
+    firstOperand: result,
+    waitingForSecondOperand: true,
+    hasBeenEvaluated: true,
+  });
+}
+
+/**
+ * @param {State} state
+ * @param {string} operator
+ * @returns {void}
+ */
 function handleOperatorClick(state, operator) {
   if (state.waitingForFirstOperand === true) {
     updateState(state, {
@@ -143,6 +202,10 @@ function handleNumberClick(state, number) {
   });
 }
 
+/**
+ * @param {State} state
+ * @returns {number}
+ */
 function performCalculation(state) {
   const { firstOperand, secondOperand, operator } = state;
 
