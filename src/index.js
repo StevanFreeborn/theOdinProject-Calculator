@@ -1,11 +1,11 @@
 /**
  * @typedef {Object} State
- * @property {number} displayValue - The value to be displayed on the calculator
+ * @property {string} displayValue - The value to be displayed on the calculator
  * @property {boolean} waitingForFirstOperand - Whether the calculator is waiting for the first operand
- * @property {number} firstOperand - The first operand
+ * @property {string} firstOperand - The first operand
  * @property {string} operator - The operator
  * @property {boolean} waitingForSecondOperand - Whether the calculator is waiting for the second operand
- * @property {number} secondOperand - The second operand
+ * @property {string} secondOperand - The second operand
  * @property {boolean} hasBeenEvaluated - Whether the entered calculation has been evaluated
  */
 const state = {
@@ -76,28 +76,24 @@ function handleBackspaceClick(state) {
   }
 
   const updatedDisplayValue =
-    state.displayValue.toString().slice(0, -1) === ''
+    state.displayValue.slice(0, -1) === ''
       ? 0
-      : state.displayValue.toString().slice(0, -1);
-
-  const updatedDisplayValueAsNumber = Number(
-    updatedDisplayValue
-  );
+      : state.displayValue.slice(0, -1);
 
   if (
     state.waitingForFirstOperand === true ||
     state.hasBeenEvaluated === true
   ) {
     updateState(state, {
-      displayValue: updatedDisplayValueAsNumber,
-      firstOperand: updatedDisplayValueAsNumber,
+      displayValue: updatedDisplayValue,
+      firstOperand: updatedDisplayValue,
     });
     return;
   }
 
   updateState(state, {
-    displayValue: updatedDisplayValueAsNumber,
-    secondOperand: updatedDisplayValueAsNumber,
+    displayValue: updatedDisplayValue,
+    secondOperand: updatedDisplayValue,
   });
 }
 
@@ -106,7 +102,7 @@ function handleBackspaceClick(state) {
  * @returns {void}
  */
 function handleSignClick(state) {
-  if (state.displayValue === 0) {
+  if (state.displayValue === '0') {
     return;
   }
 
@@ -200,41 +196,41 @@ function handleOperatorClick(state, operator) {
 function handleNumberClick(state, number) {
   let updatedDisplayValue = state.displayValue + number;
 
+  if (
+    (state.waitingForFirstOperand === true &&
+      state.firstOperand === null) ||
+    state.waitingForSecondOperand === true
+  ) {
+    updatedDisplayValue = number;
+  }
+
+  updatedDisplayValue =
+    updatedDisplayValue.split('.')[1] === undefined
+      ? parseFloat(updatedDisplayValue).toFixed(0)
+      : parseFloat(updatedDisplayValue).toFixed(
+          updatedDisplayValue.split('.')[1].length
+        );
+
   if (state.hasBeenEvaluated === true) {
     updateState(state, {
       displayValue: number,
-      firstOperand: Number(number),
+      firstOperand: number,
       hasBeenEvaluated: false,
     });
     return;
   }
 
-  if (
-    state.waitingForFirstOperand === true &&
-    state.firstOperand === null
-  ) {
-    updatedDisplayValue = number;
-  }
-
-  if (state.waitingForSecondOperand === true) {
-    updatedDisplayValue = number;
-  }
-
-  const updatedDisplayValueAsNumber = Number(
-    updatedDisplayValue
-  );
-
   if (state.waitingForFirstOperand === true) {
     updateState(state, {
-      displayValue: updatedDisplayValueAsNumber,
-      firstOperand: updatedDisplayValueAsNumber,
+      displayValue: updatedDisplayValue,
+      firstOperand: updatedDisplayValue,
     });
     return;
   }
 
   updateState(state, {
-    displayValue: updatedDisplayValueAsNumber,
-    secondOperand: updatedDisplayValueAsNumber,
+    displayValue: updatedDisplayValue,
+    secondOperand: updatedDisplayValue,
     waitingForSecondOperand: false,
   });
 }
@@ -246,15 +242,18 @@ function handleNumberClick(state, number) {
 function performCalculation(state) {
   const { firstOperand, secondOperand, operator } = state;
 
+  var firstOperandAsNumber = Number(firstOperand);
+  var secondOperandAsNumber = Number(secondOperand);
+
   switch (operator) {
     case '+':
-      return firstOperand + secondOperand;
+      return firstOperandAsNumber + secondOperandAsNumber;
     case '-':
-      return firstOperand - secondOperand;
+      return firstOperandAsNumber - secondOperandAsNumber;
     case 'x':
-      return firstOperand * secondOperand;
+      return firstOperandAsNumber * secondOperandAsNumber;
     case '÷':
-      return firstOperand / secondOperand;
+      return firstOperandAsNumber / secondOperandAsNumber;
     default:
       return 0;
   }
@@ -289,15 +288,19 @@ function updateState(state, newState) {
 
 /**
  * Updates the display value
- * @param {number} displayValue
+ * @param {string} displayValue
  * @returns {void}
  */
 function updateDisplayValue(displayValue) {
   const display = document.querySelector('#display-value');
+  const displayValueAsNumber = Number(displayValue);
+
   display.textContent =
-    displayValue.toString().length > 9
-      ? displayValue.toExponential(5).replace(/e\+/, 'e')
-      : displayValue.toLocaleString();
+    displayValueAsNumber.toString().length > 9
+      ? displayValueAsNumber
+          .toExponential(5)
+          .replace(/e\+/, 'e')
+      : displayValueAsNumber.toLocaleString();
 }
 
 /**
