@@ -74,7 +74,15 @@ window.addEventListener('DOMContentLoaded', () => {
   setInterval(updateTime, 1000);
 });
 
+/**
+ * @param {State} state
+ * @returns {void}
+ */
 function handleSignClick(state) {
+  if (state.displayValue === 0) {
+    return;
+  }
+
   if (
     state.waitingForFirstOperand === true ||
     state.hasBeenEvaluated === true
