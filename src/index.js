@@ -83,19 +83,21 @@ function handleSignClick(state) {
     return;
   }
 
+  const updatedDisplayValue = state.displayValue * -1;
+
   if (
     state.waitingForFirstOperand === true ||
     state.hasBeenEvaluated === true
   ) {
     updateState(state, {
-      displayValue: state.displayValue * -1,
+      displayValue: updatedDisplayValue,
       firstOperand: state.firstOperand * -1,
     });
     return;
   }
 
   updateState(state, {
-    displayValue: state.displayValue * -1,
+    displayValue: updatedDisplayValue,
     secondOperand: state.secondOperand * -1,
   });
 }
