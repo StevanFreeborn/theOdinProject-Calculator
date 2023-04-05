@@ -24,55 +24,82 @@ window.addEventListener('click', () => console.log(state));
 window.addEventListener('DOMContentLoaded', () => {
   updateDisplayValue(state.displayValue);
 
-  const numberButtons = document.querySelectorAll('.digit');
-
-  numberButtons.forEach(button => {
+  document.querySelectorAll('.digit').forEach(button => {
     button.addEventListener('click', () => {
       handleNumberClick(state, button.textContent);
     });
   });
 
-  const clearButton =
-    document.querySelector('#clear-button');
+  document
+    .querySelector('#clear-button')
+    .addEventListener('click', () => {
+      resetAll(state);
+    });
 
-  clearButton.addEventListener('click', () => {
-    resetAll(state);
-  });
-
-  const operatorButtons =
-    document.querySelectorAll('.operator');
-
-  operatorButtons.forEach(button => {
+  document.querySelectorAll('.operator').forEach(button => {
     button.addEventListener('click', () => {
       handleOperatorClick(state, button.textContent);
     });
   });
 
-  const equalsButton = document.querySelector(
-    '#equals-button'
-  );
+  document
+    .querySelector('#equals-button')
+    .addEventListener('click', () => {
+      handleEqualsClick(state);
+    });
 
-  equalsButton.addEventListener('click', () => {
-    handleEqualsClick(state);
-  });
+  document
+    .querySelector('#decimal-button')
+    .addEventListener('click', () => {
+      handleDecimalClick(state);
+    });
 
-  const decimalButton = document.querySelector(
-    '#decimal-button'
-  );
+  document
+    .querySelector('#sign-button')
+    .addEventListener('click', () => {
+      handleSignClick(state);
+    });
 
-  decimalButton.addEventListener('click', () => {
-    handleDecimalClick(state);
-  });
-
-  const signButton = document.querySelector('#sign-button');
-
-  signButton.addEventListener('click', () => {
-    handleSignClick(state);
-  });
+  document
+    .querySelector('#backspace-button')
+    .addEventListener('click', () => {
+      handleBackspaceClick(state);
+    });
 
   updateTime();
   setInterval(updateTime, 1000);
 });
+
+function handleBackspaceClick(state) {
+  if (state.displayValue === 0) {
+    return;
+  }
+
+  const updatedDisplayValue =
+    state.displayValue.toString().slice(0, -1) === ''
+      ? 0
+      : state.displayValue.toString().slice(0, -1);
+
+  const updatedDisplayValueAsNumber = Number(
+    updatedDisplayValue
+  );
+
+  if (
+    state.waitingForFirstOperand === true ||
+    state.hasBeenEvaluated === true
+  ) {
+    updateState(state, {
+      displayValue: updatedDisplayValueAsNumber,
+      firstOperand: updatedDisplayValueAsNumber,
+    });
+    return;
+  }
+
+  updateState(state, {
+    displayValue: updatedDisplayValueAsNumber,
+    secondOperand: updatedDisplayValueAsNumber,
+  });
+}
 
 /**
  * @param {State} state
