@@ -1,19 +1,22 @@
 /**
  * @typedef {Object} State
- * @property {string} displayValue
+ * @property {number} displayValue
+ * @property {boolean} waitingForFirstOperand
  * @property {number} firstOperand
  * @property {string} operator
- * @property {number} secondOperand
- * @property {boolean} waitingForFirstOperand
  * @property {boolean} waitingForSecondOperand
+ * @property {number} secondOperand
+ * @property {boolean} hasBeenEvaluated
  */
 const state = {
-  displayValue: '0',
+  displayValue: 0,
+  waitingForFirstOperand: true,
   firstOperand: null,
   operator: null,
-  secondOperand: null,
-  waitingForFirstOperand: true,
   waitingForSecondOperand: false,
+  secondOperand: null,
+  hasBeenEvaluated: false,
+  hasErrored: false,
 };
 
 window.addEventListener('click', () => console.log(state));
@@ -51,13 +54,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
   equalsButton.addEventListener('click', () => {
     const result = performCalculation(state);
+
     updateState(state, {
-      displayValue: String(result.toLocaleString()),
+      displayValue: result,
       firstOperand: result,
-      waitingForFirstOperand: false,
       waitingForSecondOperand: true,
+      hasBeenEvaluated: true,
     });
-    updateDisplayValue(state.displayValue);
   });
 
   updateTime();
@@ -65,36 +68,31 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function handleOperatorClick(state, operator) {
-  if (state.waitingForSecondOperand === true) {
+  if (state.waitingForFirstOperand === true) {
     updateState(state, {
-      operator,
-    });
-    return;
-  }
-
-  if (state.firstOperand === null) {
-    updateState(state, {
-      firstOperand: Number(state.displayValue),
-    });
-  }
-
-  if (state.operator !== null) {
-    const result = performCalculation(state);
-    updateState(state, {
-      displayValue: String(result.toLocaleString()),
-      firstOperand: result,
       operator,
       waitingForFirstOperand: false,
       waitingForSecondOperand: true,
     });
-    updateDisplayValue(state.displayValue);
     return;
   }
 
+  if (state.waitingForSecondOperand === true) {
+    updateState(state, {
+      operator,
+      secondOperand: null,
+      hasBeenEvaluated: false,
+    });
+    return;
+  }
+
+  const result = performCalculation(state);
+
   updateState(state, {
-    waitingForFirstOperand: false,
-    waitingForSecondOperand: true,
+    displayValue: result,
+    firstOperand: result,
     operator,
+    waitingForSecondOperand: true,
   });
 }
 
@@ -104,21 +102,25 @@ function handleOperatorClick(state, operator) {
  * @returns {void}
  */
 function handleNumberClick(state, number) {
-  const displayValue = state.displayValue.replaceAll(
-    ',',
-    ''
-  );
+  let updatedDisplayValue = state.displayValue + number;
 
-  if (displayValue.length === 10) {
+  if (state.hasBeenEvaluated === true) {
+    updateState(state, {
+      displayValue: number,
+      firstOperand: Number(number),
+      hasBeenEvaluated: false,
+    });
     return;
   }
 
-  let updatedDisplayValue = displayValue + number;
-
   if (
-    state.waitingForSecondOperand === true ||
-    state.waitingForFirstOperand === true
+    state.waitingForFirstOperand === true &&
+    state.firstOperand === null
   ) {
+    updatedDisplayValue = number;
+  }
+
+  if (state.waitingForSecondOperand === true) {
     updatedDisplayValue = number;
   }
 
@@ -126,24 +128,18 @@ function handleNumberClick(state, number) {
     updatedDisplayValue
   );
 
-  updateDisplayValue(
-    updatedDisplayValueAsNumber.toLocaleString()
-  );
-
-  updateState(state, {
-    displayValue: updatedDisplayValue,
-  });
-
-  if (state.waitingForSecondOperand === true) {
+  if (state.waitingForFirstOperand === true) {
     updateState(state, {
-      secondOperand: updatedDisplayValueAsNumber,
+      displayValue: updatedDisplayValueAsNumber,
+      firstOperand: updatedDisplayValueAsNumber,
     });
     return;
   }
 
   updateState(state, {
-    firstOperand: updatedDisplayValueAsNumber,
-    waitingForFirstOperand: false,
+    displayValue: updatedDisplayValueAsNumber,
+    secondOperand: updatedDisplayValueAsNumber,
+    waitingForSecondOperand: false,
   });
 }
 
@@ -171,24 +167,13 @@ function performCalculation(state) {
  */
 function resetAll(state) {
   updateState(state, {
-    displayValue: '0',
-    firstOperand: 0,
+    displayValue: 0,
+    waitingForFirstOperand: true,
+    firstOperand: null,
     operator: null,
-    secondOperand: null,
     waitingForSecondOperand: false,
+    secondOperand: null,
   });
-
-  updateDisplayValue(state.displayValue);
-}
-
-/**
- * Updates the display value
- * @param {string} displayValue
- * @returns {void}
- */
-function updateDisplayValue(displayValue) {
-  const display = document.querySelector('#display-value');
-  display.textContent = displayValue;
 }
 
 /**
@@ -199,6 +184,20 @@ function updateDisplayValue(displayValue) {
  */
 function updateState(state, newState) {
   Object.assign(state, newState);
+  updateDisplayValue(state.displayValue);
+}
+
+/**
+ * Updates the display value
+ * @param {number} displayValue
+ * @returns {void}
+ */
+function updateDisplayValue(displayValue) {
+  const display = document.querySelector('#display-value');
+  display.textContent =
+    displayValue.toString().length > 9
+      ? displayValue.toExponential(5).replace(/e\+/, 'e')
+      : displayValue.toLocaleString();
 }
 
 /**
