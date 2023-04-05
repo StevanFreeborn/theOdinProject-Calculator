@@ -1,12 +1,12 @@
 /**
  * @typedef {Object} State
- * @property {number} displayValue
- * @property {boolean} waitingForFirstOperand
- * @property {number} firstOperand
- * @property {string} operator
- * @property {boolean} waitingForSecondOperand
- * @property {number} secondOperand
- * @property {boolean} hasBeenEvaluated
+ * @property {number} displayValue - The value to be displayed on the calculator
+ * @property {boolean} waitingForFirstOperand - Whether the calculator is waiting for the first operand
+ * @property {number} firstOperand - The first operand
+ * @property {string} operator - The operator
+ * @property {boolean} waitingForSecondOperand - Whether the calculator is waiting for the second operand
+ * @property {number} secondOperand - The second operand
+ * @property {boolean} hasBeenEvaluated - Whether the entered calculation has been evaluated
  */
 const state = {
   displayValue: 0,
