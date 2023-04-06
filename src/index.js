@@ -19,10 +19,7 @@ const state = {
   hasErrored: false,
 };
 
-document.addEventListener('keydown', () => {
-  console.log(document.activeElement);
-});
-
+/* istanbul ignore next */
 window.addEventListener('DOMContentLoaded', () => {
   updateDisplayValue(state);
 
@@ -90,7 +87,12 @@ function handleKeyDown(event) {
  * @returns {void}
  */
 function handleBackspaceClick(state) {
-  if (state.displayValue === 0) {
+  if (state.hasErrored === true) {
+    resetAll(state);
+    return;
+  }
+
+  if (state.displayValue === '0') {
     return;
   }
 
@@ -135,7 +137,9 @@ function handleSignClick(state) {
     return;
   }
 
-  const updatedDisplayValue = state.displayValue * -1;
+  const updatedDisplayValue = (
+    state.displayValue * -1
+  ).toString();
 
   if (
     state.waitingForFirstOperand === true ||
@@ -143,14 +147,14 @@ function handleSignClick(state) {
   ) {
     updateState(state, {
       displayValue: updatedDisplayValue,
-      firstOperand: state.firstOperand * -1,
+      firstOperand: (state.firstOperand * -1).toString(),
     });
     return;
   }
 
   updateState(state, {
     displayValue: updatedDisplayValue,
-    secondOperand: state.secondOperand * -1,
+    secondOperand: (state.secondOperand * -1).toString(),
   });
 }
 
@@ -292,6 +296,7 @@ function performCalculation(state) {
 
   const firstOperandAsNumber = Number(firstOperand);
   const secondOperandAsNumber = Number(secondOperand);
+
   const precision = Math.max(
     firstOperand.toString().split('.')[1]?.length || 0,
     secondOperand.toString().split('.')[1]?.length || 0
@@ -307,11 +312,9 @@ function performCalculation(state) {
       result = firstOperandAsNumber - secondOperandAsNumber;
       break;
     case 'x':
-    case '*':
       result = firstOperandAsNumber * secondOperandAsNumber;
       break;
     case '÷':
-    case '/':
       if (secondOperandAsNumber === 0) {
         updateState(state, {
           hasErrored: true,
@@ -393,3 +396,17 @@ function updateTime() {
       : date.getMinutes();
   time.innerHTML = `${hours}:${minutes}`;
 }
+
+export {
+  handleBackspaceClick,
+  handleEqualsClick,
+  handleKeyDown,
+  handleNumberClick,
+  handleOperatorClick,
+  handleSignClick,
+  performCalculation,
+  resetAll,
+  updateDisplayValue,
+  updateState,
+  updateTime,
+};
