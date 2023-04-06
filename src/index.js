@@ -9,7 +9,7 @@
  * @property {boolean} hasBeenEvaluated - Whether the entered calculation has been evaluated
  */
 const state = {
-  displayValue: 0,
+  displayValue: '0',
   waitingForFirstOperand: true,
   firstOperand: null,
   operator: null,
@@ -49,12 +49,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
   document
-    .querySelector('#decimal-button')
-    .addEventListener('click', () => {
-      handleDecimalClick(state);
-    });
-
-  document
     .querySelector('#sign-button')
     .addEventListener('click', () => {
       handleSignClick(state);
@@ -77,7 +71,7 @@ function handleBackspaceClick(state) {
 
   const updatedDisplayValue =
     state.displayValue.slice(0, -1) === ''
-      ? 0
+      ? '0'
       : state.displayValue.slice(0, -1);
 
   if (
@@ -86,7 +80,10 @@ function handleBackspaceClick(state) {
   ) {
     updateState(state, {
       displayValue: updatedDisplayValue,
-      firstOperand: updatedDisplayValue,
+      firstOperand:
+        updatedDisplayValue === '0'
+          ? null
+          : updatedDisplayValue,
     });
     return;
   }
@@ -94,6 +91,7 @@ function handleBackspaceClick(state) {
   updateState(state, {
     displayValue: updatedDisplayValue,
     secondOperand: updatedDisplayValue,
+    waitingForSecondOperand: updatedDisplayValue === '0',
   });
 }
 
@@ -129,27 +127,13 @@ function handleSignClick(state) {
  * @param {State} state
  * @returns {void}
  */
-function handleDecimalClick(state) {
-  if (state.displayValue.toString().includes('.')) {
-    return;
-  }
-
-  updateState(state, {
-    displayValue: state.displayValue + '.',
-  });
-}
-
-/**
- * @param {State} state
- * @returns {void}
- */
 function handleEqualsClick(state) {
   const result = performCalculation(state);
 
   updateState(state, {
     displayValue: result,
     firstOperand: result,
-    waitingForSecondOperand: true,
+    waitingForFirstOperand: true,
     hasBeenEvaluated: true,
   });
 }
@@ -160,6 +144,16 @@ function handleEqualsClick(state) {
  * @returns {void}
  */
 function handleOperatorClick(state, operator) {
+  if (state.hasBeenEvaluated === true) {
+    updateState(state, {
+      operator,
+      waitingForFirstOperand: false,
+      waitingForSecondOperand: true,
+      hasBeenEvaluated: false,
+    });
+    return;
+  }
+
   if (state.waitingForFirstOperand === true) {
     updateState(state, {
       operator,
@@ -194,27 +188,29 @@ function handleOperatorClick(state, operator) {
  * @returns {void}
  */
 function handleNumberClick(state, number) {
+  if (state.displayValue === '0' && number === '0') {
+    return;
+  }
+
+  if (number === '.' && state.displayValue.includes('.')) {
+    return;
+  }
+
   let updatedDisplayValue = state.displayValue + number;
 
   if (
     (state.waitingForFirstOperand === true &&
       state.firstOperand === null) ||
-    state.waitingForSecondOperand === true
+    state.waitingForSecondOperand === true ||
+    state.hasBeenEvaluated === true
   ) {
-    updatedDisplayValue = number;
+    updatedDisplayValue = number === '.' ? '0.' : number;
   }
-
-  updatedDisplayValue =
-    updatedDisplayValue.split('.')[1] === undefined
-      ? parseFloat(updatedDisplayValue).toFixed(0)
-      : parseFloat(updatedDisplayValue).toFixed(
-          updatedDisplayValue.split('.')[1].length
-        );
 
   if (state.hasBeenEvaluated === true) {
     updateState(state, {
-      displayValue: number,
-      firstOperand: number,
+      displayValue: updatedDisplayValue,
+      firstOperand: updatedDisplayValue,
       hasBeenEvaluated: false,
     });
     return;
@@ -237,26 +233,38 @@ function handleNumberClick(state, number) {
 
 /**
  * @param {State} state
- * @returns {number}
+ * @returns {string} result
  */
 function performCalculation(state) {
   const { firstOperand, secondOperand, operator } = state;
 
-  var firstOperandAsNumber = Number(firstOperand);
-  var secondOperandAsNumber = Number(secondOperand);
+  const firstOperandAsNumber = Number(firstOperand);
+  const secondOperandAsNumber = Number(secondOperand);
+  const precision = Math.max(
+    firstOperand.toString().split('.')[1]?.length || 0,
+    secondOperand.toString().split('.')[1]?.length || 0
+  );
+
+  let result;
 
   switch (operator) {
     case '+':
-      return firstOperandAsNumber + secondOperandAsNumber;
+      result = firstOperandAsNumber + secondOperandAsNumber;
+      break;
     case '-':
-      return firstOperandAsNumber - secondOperandAsNumber;
+      result = firstOperandAsNumber - secondOperandAsNumber;
+      break;
     case 'x':
-      return firstOperandAsNumber * secondOperandAsNumber;
+      result = firstOperandAsNumber * secondOperandAsNumber;
+      break;
     case '÷':
-      return firstOperandAsNumber / secondOperandAsNumber;
+      result = firstOperandAsNumber / secondOperandAsNumber;
+      break;
     default:
-      return 0;
+      result = 0;
   }
+
+  return result.toFixed(precision);
 }
 
 /**
@@ -266,12 +274,13 @@ function performCalculation(state) {
  */
 function resetAll(state) {
   updateState(state, {
-    displayValue: 0,
+    displayValue: '0',
     waitingForFirstOperand: true,
     firstOperand: null,
     operator: null,
     waitingForSecondOperand: false,
     secondOperand: null,
+    hasBeenEvaluated: false,
   });
 }
 
@@ -293,14 +302,13 @@ function updateState(state, newState) {
  */
 function updateDisplayValue(displayValue) {
   const display = document.querySelector('#display-value');
-  const displayValueAsNumber = Number(displayValue);
 
   display.textContent =
-    displayValueAsNumber.toString().length > 9
-      ? displayValueAsNumber
+    displayValue.length > 9
+      ? Number(displayValue)
           .toExponential(5)
           .replace(/e\+/, 'e')
-      : displayValueAsNumber.toLocaleString();
+      : displayValue;
 }
 
 /**
