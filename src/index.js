@@ -19,7 +19,9 @@ const state = {
   hasErrored: false,
 };
 
-window.addEventListener('click', () => console.log(state));
+document.addEventListener('keydown', () => {
+  console.log(document.activeElement);
+});
 
 window.addEventListener('DOMContentLoaded', () => {
   updateDisplayValue(state);
@@ -60,9 +62,27 @@ window.addEventListener('DOMContentLoaded', () => {
       handleBackspaceClick(state);
     });
 
+  document.addEventListener('keydown', handleKeyDown);
+
   updateTime();
   setInterval(updateTime, 1000);
 });
+
+/**
+ * Handles the keydown event for the calculator
+ * @param {KeyboardEvent} event - The keydown event
+ * @returns {void}
+ */
+function handleKeyDown(event) {
+  var button = document.querySelector(
+    `[data-key="${event.key.toLowerCase()}"]`
+  );
+
+  if (button) {
+    document.activeElement.blur();
+    button.click();
+  }
+}
 
 /**
  * Handles the click event for the backspace button
@@ -287,9 +307,11 @@ function performCalculation(state) {
       result = firstOperandAsNumber - secondOperandAsNumber;
       break;
     case 'x':
+    case '*':
       result = firstOperandAsNumber * secondOperandAsNumber;
       break;
     case '÷':
+    case '/':
       if (secondOperandAsNumber === 0) {
         updateState(state, {
           hasErrored: true,
