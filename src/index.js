@@ -288,6 +288,7 @@ function performCalculation(state) {
 
   const firstOperandAsNumber = Number(firstOperand);
   const secondOperandAsNumber = Number(secondOperand);
+
   const precision = Math.max(
     firstOperand.toString().split('.')[1]?.length || 0,
     secondOperand.toString().split('.')[1]?.length || 0
@@ -303,11 +304,9 @@ function performCalculation(state) {
       result = firstOperandAsNumber - secondOperandAsNumber;
       break;
     case 'x':
-    case '*':
       result = firstOperandAsNumber * secondOperandAsNumber;
       break;
     case '÷':
-    case '/':
       if (secondOperandAsNumber === 0) {
         updateState(state, {
           hasErrored: true,
@@ -391,6 +390,9 @@ function updateTime() {
 }
 
 export {
+  handleEqualsClick,
+  handleNumberClick,
+  handleOperatorClick,
   performCalculation,
   resetAll,
   updateDisplayValue,
