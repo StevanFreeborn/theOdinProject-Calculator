@@ -393,3 +393,5 @@ function updateTime() {
       : date.getMinutes();
   time.innerHTML = `${hours}:${minutes}`;
 }
+
+export { updateTime, updateDisplayValue };
