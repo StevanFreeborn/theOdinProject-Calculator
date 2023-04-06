@@ -19,6 +19,7 @@ const state = {
   hasErrored: false,
 };
 
+/* istanbul ignore next */
 window.addEventListener('DOMContentLoaded', () => {
   updateDisplayValue(state);
 
@@ -86,7 +87,12 @@ function handleKeyDown(event) {
  * @returns {void}
  */
 function handleBackspaceClick(state) {
-  if (state.displayValue === 0) {
+  if (state.hasErrored === true) {
+    resetAll(state);
+    return;
+  }
+
+  if (state.displayValue === '0') {
     return;
   }
 
@@ -131,7 +137,9 @@ function handleSignClick(state) {
     return;
   }
 
-  const updatedDisplayValue = state.displayValue * -1;
+  const updatedDisplayValue = (
+    state.displayValue * -1
+  ).toString();
 
   if (
     state.waitingForFirstOperand === true ||
@@ -139,14 +147,14 @@ function handleSignClick(state) {
   ) {
     updateState(state, {
       displayValue: updatedDisplayValue,
-      firstOperand: state.firstOperand * -1,
+      firstOperand: (state.firstOperand * -1).toString(),
     });
     return;
   }
 
   updateState(state, {
     displayValue: updatedDisplayValue,
-    secondOperand: state.secondOperand * -1,
+    secondOperand: (state.secondOperand * -1).toString(),
   });
 }
 
@@ -390,9 +398,12 @@ function updateTime() {
 }
 
 export {
+  handleBackspaceClick,
   handleEqualsClick,
+  handleKeyDown,
   handleNumberClick,
   handleOperatorClick,
+  handleSignClick,
   performCalculation,
   resetAll,
   updateDisplayValue,

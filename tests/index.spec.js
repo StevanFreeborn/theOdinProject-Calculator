@@ -1,8 +1,11 @@
 import { jest } from '@jest/globals';
 import {
+  handleBackspaceClick,
   handleEqualsClick,
+  handleKeyDown,
   handleNumberClick,
   handleOperatorClick,
+  handleSignClick,
   performCalculation,
   resetAll,
   updateDisplayValue,
@@ -625,6 +628,205 @@ describe('index', () => {
       expect(state.waitingForFirstOperand).toBe(true);
       expect(state.waitingForSecondOperand).toBe(false);
       expect(state.hasBeenEvaluated).toBe(true);
+    });
+  });
+
+  describe('handleSignClick', () => {
+    let state;
+
+    beforeEach(() => {
+      state = {
+        displayValue: '0',
+        waitingForFirstOperand: true,
+        firstOperand: null,
+        operator: null,
+        waitingForSecondOperand: false,
+        secondOperand: null,
+        hasBeenEvaluated: false,
+        hasErrored: false,
+      };
+    });
+
+    it('should reset the calculator state when called and the calculator has errored', () => {
+      state.hasErrored = true;
+
+      handleSignClick(state);
+
+      expect(state).toEqual({
+        displayValue: '0',
+        waitingForFirstOperand: true,
+        firstOperand: null,
+        operator: null,
+        waitingForSecondOperand: false,
+        secondOperand: null,
+        hasBeenEvaluated: false,
+        hasErrored: false,
+      });
+    });
+
+    it('should not apply sign to display value if display value is 0', () => {
+      state.displayValue = '0';
+
+      handleSignClick(state);
+
+      expect(state.displayValue).toBe('0');
+    });
+
+    it('should apply sign to the display value and first operand when waiting for the first operand', () => {
+      state.displayValue = '3';
+      state.firstOperand = '3';
+
+      handleSignClick(state);
+
+      expect(state.displayValue).toBe('-3');
+      expect(state.firstOperand).toBe('-3');
+    });
+
+    it('should apply sign to the display value and first operand when previous operation has been evaluated', () => {
+      state.displayValue = '3';
+      state.firstOperand = '3';
+      state.waitingForFirstOperand = false;
+      state.hasBeenEvaluated = true;
+
+      handleSignClick(state);
+
+      expect(state.displayValue).toBe('-3');
+      expect(state.firstOperand).toBe('-3');
+    });
+
+    it('should apply sign to the display value and second operand when not waiting for first operand and previous operation has not been evaluated', () => {
+      state.displayValue = '3';
+      state.secondOperand = '3';
+      state.waitingForFirstOperand = false;
+      state.hasBeenEvaluated = false;
+
+      handleSignClick(state);
+
+      expect(state.displayValue).toBe('-3');
+      expect(state.secondOperand).toBe('-3');
+    });
+  });
+
+  describe('handleBackspaceClick', () => {
+    let state;
+
+    beforeEach(() => {
+      state = {
+        displayValue: '0',
+        waitingForFirstOperand: true,
+        firstOperand: null,
+        operator: null,
+        waitingForSecondOperand: false,
+        secondOperand: null,
+        hasBeenEvaluated: false,
+        hasErrored: false,
+      };
+    });
+
+    it('should reset the calculator state when called and the calculator has errored', () => {
+      state.hasErrored = true;
+
+      handleBackspaceClick(state);
+
+      expect(state).toEqual({
+        displayValue: '0',
+        waitingForFirstOperand: true,
+        firstOperand: null,
+        operator: null,
+        waitingForSecondOperand: false,
+        secondOperand: null,
+        hasBeenEvaluated: false,
+        hasErrored: false,
+      });
+    });
+
+    it('should remove the last digit from the display value and first operand when waiting for the first operand', () => {
+      state.displayValue = '33';
+      state.firstOperand = '33';
+
+      handleBackspaceClick(state);
+
+      expect(state.displayValue).toBe('3');
+      expect(state.firstOperand).toBe('3');
+    });
+
+    it('should remove the last digit from the display value and first operand when previous operation has been evaluated', () => {
+      state.displayValue = '3';
+      state.firstOperand = '3';
+      state.waitingForFirstOperand = false;
+      state.hasBeenEvaluated = true;
+
+      handleBackspaceClick(state);
+
+      expect(state.displayValue).toBe('0');
+      expect(state.firstOperand).toBe(null);
+    });
+
+    it('should remove the last digit from the display value and second operand when not waiting for first operand and previous operation has not been evaluated', () => {
+      state.displayValue = '3';
+      state.secondOperand = '3';
+      state.waitingForFirstOperand = false;
+      state.hasBeenEvaluated = false;
+
+      handleBackspaceClick(state);
+
+      expect(state.displayValue).toBe('0');
+      expect(state.secondOperand).toBe('0');
+    });
+
+    it('should remove the last digit from the display value and second operand when not waiting for first operand and previous operation has not been evaluated', () => {
+      state.displayValue = '33';
+      state.secondOperand = '33';
+      state.waitingForFirstOperand = false;
+      state.hasBeenEvaluated = false;
+
+      handleBackspaceClick(state);
+
+      expect(state.displayValue).toBe('3');
+      expect(state.secondOperand).toBe('3');
+    });
+
+    it('should not alter the display value if display value is 0', () => {
+      state.displayValue = '0';
+
+      handleBackspaceClick(state);
+
+      expect(state.displayValue).toBe('0');
+    });
+  });
+
+  describe('handleKeyDown', () => {
+    let clickSpy;
+
+    beforeEach(() => {
+      const button = document.createElement('button');
+      button.dataset.key = 'a';
+      document.documentElement.appendChild(button);
+      clickSpy = jest.spyOn(button, 'click');
+    });
+
+    it('should click the corresponding button element for the key pressed', () => {
+      const event = new KeyboardEvent('keydown', {
+        key: 'a',
+        bubbles: true,
+        cancelable: true,
+      });
+
+      handleKeyDown(event);
+
+      expect(clickSpy).toHaveBeenCalled();
+    });
+
+    it('should not click the button element if key entered does not correspond with a button', () => {
+      const event = new KeyboardEvent('keydown', {
+        key: 'b',
+        bubbles: true,
+        cancelable: true,
+      });
+
+      handleKeyDown(event);
+
+      expect(clickSpy).not.toHaveBeenCalled();
     });
   });
 });
