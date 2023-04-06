@@ -22,7 +22,7 @@ const state = {
 window.addEventListener('click', () => console.log(state));
 
 window.addEventListener('DOMContentLoaded', () => {
-  updateDisplayValue(state.displayValue);
+  updateDisplayValue(state);
 
   document.querySelectorAll('.digit').forEach(button => {
     button.addEventListener('click', () => {
@@ -64,6 +64,11 @@ window.addEventListener('DOMContentLoaded', () => {
   setInterval(updateTime, 1000);
 });
 
+/**
+ * Handles the click event for the backspace button
+ * @param {State} state - The state of the calculator
+ * @returns {void}
+ */
 function handleBackspaceClick(state) {
   if (state.displayValue === 0) {
     return;
@@ -96,10 +101,16 @@ function handleBackspaceClick(state) {
 }
 
 /**
- * @param {State} state
+ * Handles the click event for the sign button
+ * @param {State} state - The state of the calculator
  * @returns {void}
  */
 function handleSignClick(state) {
+  if (state.hasErrored === true) {
+    resetAll(state);
+    return;
+  }
+
   if (state.displayValue === '0') {
     return;
   }
@@ -124,10 +135,16 @@ function handleSignClick(state) {
 }
 
 /**
- * @param {State} state
+ * Handles the click event for the equals button
+ * @param {State} state - The state of the calculator
  * @returns {void}
  */
 function handleEqualsClick(state) {
+  if (state.hasErrored === true) {
+    resetAll(state);
+    return;
+  }
+
   const result = performCalculation(state);
 
   updateState(state, {
@@ -139,11 +156,17 @@ function handleEqualsClick(state) {
 }
 
 /**
- * @param {State} state
- * @param {string} operator
+ * Handles the click event for an operator button
+ * @param {State} state - The state of the calculator
+ * @param {string} operator - The operator to be used in the calculation
  * @returns {void}
  */
 function handleOperatorClick(state, operator) {
+  if (state.hasErrored === true) {
+    resetAll(state);
+    return;
+  }
+
   if (state.hasBeenEvaluated === true) {
     updateState(state, {
       operator,
@@ -157,6 +180,8 @@ function handleOperatorClick(state, operator) {
   if (state.waitingForFirstOperand === true) {
     updateState(state, {
       operator,
+      firstOperand:
+        state.firstOperand ?? state.displayValue,
       waitingForFirstOperand: false,
       waitingForSecondOperand: true,
     });
@@ -183,11 +208,17 @@ function handleOperatorClick(state, operator) {
 }
 
 /**
- * @param {State} state
- * @param {string} number
+ * Handles the click event for a number button
+ * @param {State} state - The state of the calculator
+ * @param {string} number - The number to be added to the display value
  * @returns {void}
  */
 function handleNumberClick(state, number) {
+  if (state.hasErrored === true) {
+    resetAll(state);
+    return;
+  }
+
   if (state.displayValue === '0' && number === '0') {
     return;
   }
@@ -232,8 +263,9 @@ function handleNumberClick(state, number) {
 }
 
 /**
- * @param {State} state
- * @returns {string} result
+ * Performs the calculation based on the current state
+ * @param {State} state - The current state of the calculator
+ * @returns {string} result - The result of the calculation
  */
 function performCalculation(state) {
   const { firstOperand, secondOperand, operator } = state;
@@ -258,6 +290,11 @@ function performCalculation(state) {
       result = firstOperandAsNumber * secondOperandAsNumber;
       break;
     case '÷':
+      if (secondOperandAsNumber === 0) {
+        updateState(state, {
+          hasErrored: true,
+        });
+      }
       result = firstOperandAsNumber / secondOperandAsNumber;
       break;
     default:
@@ -269,7 +306,7 @@ function performCalculation(state) {
 
 /**
  * Resets the state
- * @param {State} state
+ * @param {State} state - the current state object
  * @returns {void}
  */
 function resetAll(state) {
@@ -281,34 +318,40 @@ function resetAll(state) {
     waitingForSecondOperand: false,
     secondOperand: null,
     hasBeenEvaluated: false,
+    hasErrored: false,
   });
 }
 
 /**
  * Updates the state object with the new state
- * @param {State} state
- * @param {State} newState
+ * @param {State} state - the current state object
+ * @param {State} newState - the new state object
  * @returns {void}
  */
 function updateState(state, newState) {
   Object.assign(state, newState);
-  updateDisplayValue(state.displayValue);
+  updateDisplayValue(state);
 }
 
 /**
  * Updates the display value
- * @param {string} displayValue
+ * @param {State} state - the current state object
  * @returns {void}
  */
-function updateDisplayValue(displayValue) {
+function updateDisplayValue(state) {
   const display = document.querySelector('#display-value');
 
+  if (state.hasErrored === true) {
+    display.textContent = "don't do that";
+    return;
+  }
+
   display.textContent =
-    displayValue.length > 9
-      ? Number(displayValue)
+    state.displayValue.length > 9
+      ? Number(state.displayValue)
           .toExponential(5)
           .replace(/e\+/, 'e')
-      : displayValue;
+      : state.displayValue;
 }
 
 /**
