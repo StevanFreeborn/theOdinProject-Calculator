@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals';
 import {
+  performCalculation,
   resetAll,
   updateDisplayValue,
   updateState,
@@ -164,5 +165,31 @@ describe('index', () => {
     });
   });
 
-  describe('performCalculation', () => {});
+  describe('performCalculation', () => {
+    it('should perform the calculation correctly when the operator is + and the required precision is 0', () => {
+      const state = {
+        displayValue: '3',
+        waitingForFirstOperand: false,
+        firstOperand: '1',
+        operator: '+',
+        waitingForSecondOperand: false,
+        secondOperand: '3',
+      };
+      const result = performCalculation(state);
+      expect(result).toBe('4');
+    });
+
+    it('should perform the calculation correctly when the operator is + and the required precision is 1', () => {
+      const state = {
+        displayValue: '3.1',
+        waitingForFirstOperand: false,
+        firstOperand: '1.1',
+        operator: '+',
+        waitingForSecondOperand: false,
+        secondOperand: '3.1',
+      };
+      const result = performCalculation(state);
+      expect(result).toBe('4.2');
+    });
+  });
 });

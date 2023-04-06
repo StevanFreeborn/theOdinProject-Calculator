@@ -19,10 +19,6 @@ const state = {
   hasErrored: false,
 };
 
-document.addEventListener('keydown', () => {
-  console.log(document.activeElement);
-});
-
 window.addEventListener('DOMContentLoaded', () => {
   updateDisplayValue(state);
 

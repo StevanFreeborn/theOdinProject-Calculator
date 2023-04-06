@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">18.34% </span>
+                <span class="strong">22.01% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/109</span>
+                <span class='fraction'>24/109</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12% </span>
+                <span class="strong">17.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/75</span>
+                <span class='fraction'>13/75</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">18.34% </span>
+                <span class="strong">22.01% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/109</span>
+                <span class='fraction'>24/109</span>
             </div>
         
             
@@ -756,25 +756,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -784,14 +780,18 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1164,25 +1164,25 @@ function performCalculation(state) {
   const firstOperandAsNumber = Number(firstOperand);
   const secondOperandAsNumber = Number(secondOperand);
   const precision = Math.max(
-    firstOperand.toString().split('.')[1]?.length || <span class="branch-1 cbranch-no" title="branch not covered" >0,</span>
+    firstOperand.toString().split('.')[1]?.length || 0,
     secondOperand.toString().split('.')[1]?.length || 0
   );
 &nbsp;
   let result;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  switch (operator) {</span>
+  switch (operator) {
     case '+':
-<span class="cstat-no" title="statement not covered" >      result = firstOperandAsNumber + secondOperandAsNumber;</span>
-<span class="cstat-no" title="statement not covered" >      break;</span>
-    case '-':
+      result = firstOperandAsNumber + secondOperandAsNumber;
+      break;
+<span class="branch-1 cbranch-no" title="branch not covered" >    case '-':</span>
 <span class="cstat-no" title="statement not covered" >      result = firstOperandAsNumber - secondOperandAsNumber;</span>
 <span class="cstat-no" title="statement not covered" >      break;</span>
-    case 'x':
-    case '*':
+<span class="branch-2 cbranch-no" title="branch not covered" >    case 'x':</span>
+<span class="branch-3 cbranch-no" title="branch not covered" >    case '*':</span>
 <span class="cstat-no" title="statement not covered" >      result = firstOperandAsNumber * secondOperandAsNumber;</span>
 <span class="cstat-no" title="statement not covered" >      break;</span>
-    case '÷':
-    case '/':
+<span class="branch-4 cbranch-no" title="branch not covered" >    case '÷':</span>
+<span class="branch-5 cbranch-no" title="branch not covered" >    case '/':</span>
 <span class="cstat-no" title="statement not covered" >      if (secondOperandAsNumber === 0) {</span>
 <span class="cstat-no" title="statement not covered" >        updateState(state, {</span>
           hasErrored: true,
@@ -1190,11 +1190,11 @@ function performCalculation(state) {
       }
 <span class="cstat-no" title="statement not covered" >      result = firstOperandAsNumber / secondOperandAsNumber;</span>
 <span class="cstat-no" title="statement not covered" >      break;</span>
-    default:
+<span class="branch-6 cbranch-no" title="branch not covered" >    default:</span>
 <span class="cstat-no" title="statement not covered" >      result = 0;</span>
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return result.toFixed(precision);</span>
+  return result.toFixed(precision);
 }
 &nbsp;
 /**
@@ -1266,11 +1266,11 @@ function updateTime() {
 }
 &nbsp;
 export {
-  updateTime,
+  performCalculation,
+  resetAll,
   updateDisplayValue,
   updateState,
-  resetAll,
-  performCalculation,
+  updateTime,
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -1279,7 +1279,7 @@ export {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-04-06T05:08:23.508Z
+                at 2023-04-06T17:15:12.496Z
             </div>
         <script src="prettify.js"></script>
         <script>
