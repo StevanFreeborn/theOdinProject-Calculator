@@ -1,6 +1,8 @@
 import { jest } from '@jest/globals';
 import {
+  resetAll,
   updateDisplayValue,
+  updateState,
   updateTime,
 } from '../src/index.js';
 import { loadView } from './utils.js';
@@ -108,4 +110,59 @@ describe('index', () => {
       ).toBe("don't do that");
     });
   });
+
+  describe('updateState', () => {
+    it('should update the state correctly', () => {
+      const state = {
+        displayValue: '12345678',
+        waitingForFirstOperand: true,
+        firstOperand: null,
+        operator: null,
+        waitingForSecondOperand: false,
+        secondOperand: null,
+        hasBeenEvaluated: false,
+        hasErrored: false,
+      };
+      const newState = {
+        displayValue: '0',
+        waitingForFirstOperand: true,
+        firstOperand: null,
+        operator: null,
+        waitingForSecondOperand: false,
+        secondOperand: null,
+        hasBeenEvaluated: false,
+        hasErrored: false,
+      };
+      updateState(state, newState);
+      expect(state).toEqual(newState);
+    });
+  });
+
+  describe('resetAll', () => {
+    it('should reset the state correctly', () => {
+      const state = {
+        displayValue: '12345678',
+        waitingForFirstOperand: true,
+        firstOperand: null,
+        operator: null,
+        waitingForSecondOperand: false,
+        secondOperand: null,
+        hasBeenEvaluated: false,
+        hasErrored: false,
+      };
+      resetAll(state);
+      expect(state).toEqual({
+        displayValue: '0',
+        waitingForFirstOperand: true,
+        firstOperand: null,
+        operator: null,
+        waitingForSecondOperand: false,
+        secondOperand: null,
+        hasBeenEvaluated: false,
+        hasErrored: false,
+      });
+    });
+  });
+
+  describe('performCalculation', () => {});
 });

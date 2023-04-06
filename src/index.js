@@ -394,4 +394,10 @@ function updateTime() {
   time.innerHTML = `${hours}:${minutes}`;
 }
 
-export { updateTime, updateDisplayValue };
+export {
+  performCalculation,
+  resetAll,
+  updateDisplayValue,
+  updateState,
+  updateTime,
+};
